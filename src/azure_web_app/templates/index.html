@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Set the charset -->
+    <meta charset="utf-8" />
+    <!-- Metadata to tell the browser that this document is reponsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello</title>
+    <!-- Include boostrap 5, copied from their website:  https://getbootstrap.com/docs/5.3/getting-started/introduction/-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <main>
+      <!-- Simple jinja templating. In your render_html, you can do variable substitution here. -->
+      <h1>Hello {{ name }}!</h1>
+
+      <!-- Javascript demonstration -->
+      <div>
+        <p>Click the button to increment the counter:</p>
+        <!-- The btn and btn-primary classes are from bootstrap -->
+        <button id="incrementButton" class="btn btn-primary">
+          Increment Counter
+        </button>
+        <p>Counter: <span id="counter">0</span></p>
+      </div>
+    </main>
+
+    <!-- Include the javascript necessary for bootstrap to run. 
+     Generally speaking, we include the javascript last, outside of head. This makes the web page
+     load faster the first time, as it doesn't have to download the javascript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Include our  -->
+    <script src="{{ url_for('static', filename='js/button.js') }}"></script>
+  </body>
+</html>
