@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Reading Corner | Carla's Website{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Carla's Reading Corner</h1>
+<p class="lead">
+    A collection of stories I want to explore.
+</p>
+
+{# Component 1: Alert #}
+<div class="alert alert-info" role="alert">
+    My reading list has {{ books | length }} books.
+    The priority labels show which ones I want to explore first.
+</div>
+
+<h2 class="mb-3">On my bookshelf</h2>
+
+<div class="row g-4">
+    {% for book in books %}
+    <div class="col-12 col-md-6 col-lg-4">
+        {# Component 2: Card #}
+        <article class="card h-100 shadow-sm">
+            <div class="card-body">
+                <p class="text-secondary small">{{ book.genre | upper }}</p>
+                <h3 class="card-title h5">{{ book.title }}</h3>
+                <p class="card-subtitle mb-3 text-body-secondary">
+                    {{ book.author }}
+                </p>
+                <p class="card-text">{{ book.note }}</p>
+
+                {# Component 3: Badge, selected with a Jinja conditional #}
+                {% if book.priority %}
+                <span class="badge text-bg-success">Priority read</span>
+                {% else %}
+                <span class="badge text-bg-secondary">For later</span>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+    {% else %}
+    <p>No books have been added yet.</p>
+    {% endfor %}
+</div>
+
+<section class="mt-5" aria-labelledby="reading-plan-heading">
+    <h2 id="reading-plan-heading">My reading plan</h2>
+
+    {# Component 4: List group #}
+    <ul class="list-group">
+        <li class="list-group-item">Choose one book to focus on at a time.</li>
+        <li class="list-group-item">Make time for a chapter during the week.</li>
+        <li class="list-group-item">Write a short note about an interesting idea.</li>
+    </ul>
+</section>
+
+<section class="mt-5" aria-labelledby="more-heading">
+    <h2 id="more-heading">More about this collection</h2>
+
+    {# Component 5: Accordion #}
+    <div class="accordion" id="readingAccordion">
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#readingReasons" aria-expanded="false" aria-controls="readingReasons">
+                    Why include different genres?
+                </button>
+            </h3>
+            <div id="readingReasons" class="accordion-collapse collapse" data-bs-parent="#readingAccordion">
+                <div class="accordion-body">
+                    Fiction offers stories to think about, while technology books
+                    connect with subjects I am learning in Computer Science.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#readingNotes" aria-expanded="false" aria-controls="readingNotes">
+                    What would I put in a reading note?
+                </button>
+            </h3>
+            <div id="readingNotes" class="accordion-collapse collapse" data-bs-parent="#readingAccordion">
+                <div class="accordion-body">
+                    A question, a reaction to a character's decision, or an idea
+                    that connects with something from class.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,6 +1,31 @@
 from flask import Flask, render_template
 
 
+BOOKS = [
+    {
+        "title": "The Hunger Games",
+        "author": "Suzanne Collins",
+        "genre": "fiction",
+        "priority": True,
+        "note": "A story to explore about survival and difficult choices.",
+    },
+    {
+        "title": "AI Snake Oil",
+        "author": "Arvind Narayanan and Sayash Kapoor",
+        "genre": "technology",
+        "priority": True,
+        "note": "A book about understanding what AI can and cannot do.",
+    },
+    {
+        "title": "Frankenstein",
+        "author": "Mary Shelley",
+        "genre": "classic",
+        "priority": False,
+        "note": "A story that raises questions about creation and responsibility.",
+    },
+]
+
+
 def create_app():
     app = Flask(__name__)
     setup_routes(app)
@@ -8,11 +33,17 @@ def create_app():
 
 
 def index():
-    return render_template("index.html", name="Flask Bootstrap5")
+    return render_template("index.html", name="Carla")
+
+
+def reading():
+    """Display my reading interests using Bootstrap components."""
+    return render_template("reading.html", books=BOOKS)
 
 
 def setup_routes(app):
     app.route("/")(index)
+    app.route("/reading")(reading)
 
 
 def run_app(debug: bool = True) -> None:
@@ -21,5 +52,4 @@ def run_app(debug: bool = True) -> None:
 
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)
+    run_app()
