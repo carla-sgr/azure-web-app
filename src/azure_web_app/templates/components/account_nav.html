@@ -1,0 +1,9 @@
+{#
+  The account buttons on the right side of the navbar.
+  base.html includes this inside the navbar, so it shows up on every page.
+  Each button opens a modal by pointing data-bs-target at the modal's id.
+#}
+<div class="ms-auto d-flex gap-2">
+  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Log in</button>
+  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+</div>
