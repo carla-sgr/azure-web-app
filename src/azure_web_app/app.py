@@ -1,7 +1,8 @@
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, render_template
+from azure_web_app.sessions import login_required
 
-from azure_web_app import auth, db
+from azure_web_app import auth, db, sessions
 from azure_web_app._constants import SECRET_ENV_FILE
 
 
@@ -34,6 +35,7 @@ def create_app():
     load_dotenv(find_dotenv(SECRET_ENV_FILE))
     app = Flask(__name__)
     db.setup_for_app(app)
+    sessions.setup_sessions(app)
     auth.setup_auth(app)
     setup_routes(app)
     return app
@@ -48,9 +50,22 @@ def reading():
     return render_template("reading.html", books=BOOKS)
 
 
+@login_required
+def account():
+    """Display the logged-in user's account."""
+    return render_template("account.html")
+
+
+@login_required
+def reading_goals():
+    """Show reading goals only to signed-in users."""
+    return render_template("reading_goals.html")
+
 def setup_routes(app):
     app.route("/")(index)
     app.route("/reading")(reading)
+    app.route("/account")(account)
+    app.route("/reading-goals")(reading_goals)
 
 
 def run_app(debug: bool = True) -> None:

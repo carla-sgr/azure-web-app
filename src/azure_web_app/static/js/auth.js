@@ -159,10 +159,20 @@ async function submitLoginForm(event) {
 	alert(reply.result.message);
 
 	if (reply.response.ok) {
-		hideModal("loginModal");
+		window.location.href = "/account";
 	}
 }
 
+async function logout() {
+	const reply = await postJson("/logout", {});
+
+	if (reply === null || !reply.response.ok) {
+		alert("Logout failed. Please try again.");
+		return;
+	}
+
+	window.location.href = "/";
+}
 
 function clearValidation(event) {
 	event.target.classList.remove("is-invalid", "is-valid");
@@ -185,6 +195,23 @@ function resetModalForms(event) {
 	}
 }
 
+async function logoutEverywhere() {
+	const reply = await postJson("/logout-everywhere", {});
+
+	if (reply === null) {
+		alert("Could not reach the server. Please try again.");
+		return;
+	}
+
+	if (!reply.response.ok) {
+		alert(reply.result.message);
+		return;
+	}
+
+	window.location.href = "/";
+}
+
+
 // Connect our functions to the elements on the page.
 function attachEventListeners() {
 	// ?. means "only call addEventListener if the element exists". Every page
@@ -192,6 +219,11 @@ function attachEventListeners() {
 	document.getElementById("registerForm")?.addEventListener("submit", submitRegisterForm);
 
 	document.getElementById("loginForm")?.addEventListener("submit", submitLoginForm);
+
+	document.getElementById("logoutButton")?.addEventListener("click", logout);
+
+	document.getElementById("logoutEverywhereButton")
+		?.addEventListener("click", logoutEverywhere);
 
 	for (const input of document.querySelectorAll("input")) {
 		input.addEventListener("input", clearValidation);

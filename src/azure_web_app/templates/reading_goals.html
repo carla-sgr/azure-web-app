@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Reading Goals | Carla's Website{% endblock %}
+
+{% block content %}
+<h1>Reading Goals</h1>
+<p>Welcome, {{ current_user.display_name }}! Here are my reading goals.</p>
+
+<ul class="list-group">
+    <li class="list-group-item">Read for 20 minutes each day.</li>
+    <li class="list-group-item">Finish one book each month.</li>
+    <li class="list-group-item">Explore a new genre.</li>
+</ul>
+{% endblock %}

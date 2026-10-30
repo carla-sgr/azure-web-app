@@ -17,6 +17,10 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 <a class="nav-link" href="{{ url_for('reading') }}">Reading Corner</a>
+                {% if current_user %}
+                <a class="nav-link" href="{{ url_for('account') }}">My account</a>
+                <a class="nav-link" href="{{ url_for('reading_goals') }}">Reading Goals</a>
+                {% endif %}
             </div>
             {% include "components/account_nav.html" %}
         </div>

@@ -14,7 +14,10 @@ import os
 import mssql_python
 from flask import Flask, g
 
-from ._constants import CONNECTION_STRING_VARIABLE
+from ._constants import (
+    CONNECTION_STRING_VARIABLE,
+    SESSION_LIFETIME_SECONDS,
+)
 
 
 def get_connection_string() -> str:
@@ -77,11 +80,64 @@ class Database:
         with self.connection.cursor() as cursor:
             cursor.execute(
                 """
-                SELECT password, display_name, last_login
+                SELECT userid, password, display_name, last_login
                 FROM Users
                 WHERE username = ?
                 """,
                 (username,),
+            )
+            return cursor.fetchone()
+    def create_session(self, user_id: int) -> str:
+        """Create a session and return its database-generated ID."""
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """
+                INSERT INTO Sessions (userid, expiry)
+                OUTPUT INSERTED.sessionid
+                VALUES (?, DATEADD(SECOND, ?, GETDATE()))
+                """,
+                (user_id, SESSION_LIFETIME_SECONDS),
+            )
+            session_id = str(cursor.fetchone()[0])
+
+        self.connection.commit()
+        return session_id
+
+    def delete_session(self, session_id: str) -> None:
+        """Delete one session."""
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM Sessions WHERE sessionid = ?",
+                (session_id,),
+            )
+
+        self.connection.commit()
+
+
+    def delete_user_sessions(self, user_id: int) -> None:
+        """Delete all sessions belonging to this user."""
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM Sessions WHERE userid = ?",
+                (user_id,),
+            )
+        self.connection.commit()
+
+
+    def get_session_user(self, session_id: str):
+        """Return the session and its user, or None if not found."""
+        with self.connection.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT Users.userid, Users.username, Users.display_name,
+                    Users.last_login, Sessions.sessionid, Sessions.expiry,
+                    CASE WHEN Sessions.expiry <= GETDATE()
+                        THEN 1 ELSE 0 END AS is_expired
+                FROM Sessions
+                JOIN Users ON Users.userid = Sessions.userid
+                WHERE Sessions.sessionid = ?
+                """,
+                (session_id,),
             )
             return cursor.fetchone()
 
